@@ -1,13 +1,17 @@
 package pl.aniolySystem.webApp.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "guardian")
 public class Guardian {
 
     @Id
+    @Column(name = "guardian_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
@@ -31,6 +35,10 @@ public class Guardian {
 
     @Column(name = "guardian_add_note")
     String addNote;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "guardianList")
+    @JsonBackReference
+    List<Child> childList;
 
     public Guardian() {
     }
@@ -114,4 +122,13 @@ public class Guardian {
     public void setAddNote(String addNote) {
         this.addNote = addNote;
     }
+
+    public List<Child> getChildList() {
+        return childList;
+    }
+
+    public void setChildList(List<Child> childList) {
+        this.childList = childList;
+    }
+
 }

@@ -1,14 +1,18 @@
 package pl.aniolySystem.webApp.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "child")
 public class Child {
 
     @Id
+    @Column(name = "child_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
@@ -44,6 +48,19 @@ public class Child {
 
     @Column(name = "child_add_note")
     String addNote;
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "care",
+            joinColumns = { @JoinColumn(name = "child_id") },
+            inverseJoinColumns = { @JoinColumn(name = "guardian_id") }
+    )
+    @JsonManagedReference
+    List<Guardian> guardianList;
+
+    public  void assignGuardian(Guardian guardian){
+        guardianList.add(guardian);
+    }
 
     public Child() {
     }
@@ -152,5 +169,13 @@ public class Child {
 
     public void setAddNote(String addNote) {
         this.addNote = addNote;
+    }
+
+    public List<Guardian> getGuardianList() {
+        return guardianList;
+    }
+
+    public void setGuardianList(List<Guardian> guardianList) {
+        this.guardianList = guardianList;
     }
 }

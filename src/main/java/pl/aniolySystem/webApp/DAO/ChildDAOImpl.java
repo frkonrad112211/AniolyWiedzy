@@ -5,10 +5,12 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.aniolySystem.webApp.Entity.Child;
+import pl.aniolySystem.webApp.Entity.Guardian;
 
 import javax.persistence.EntityManager;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -50,5 +52,20 @@ public class ChildDAOImpl implements ChildDAO {
         query.setParameter("theId", theId);
         Child child = query.getSingleResult();
         currentSession.delete(child);
+    }
+
+    @Override
+    public void assignGuardian(int childId, int guardianId) {
+        Session currentSession = entityManager.unwrap(Session.class);
+        Child child = currentSession.get(Child.class,childId);
+        Guardian guardian = currentSession.get(Guardian.class,guardianId);
+        child.assignGuardian(guardian);
+    }
+
+    @Override
+    public List<Guardian> getGuardianList(int childId) {
+        Session currentSession = entityManager.unwrap(Session.class);
+        Child child = currentSession.get(Child.class,childId);
+        return child.getGuardianList();
     }
 }

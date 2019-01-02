@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.aniolySystem.webApp.DAO.ChildDAOImpl;
 import pl.aniolySystem.webApp.Entity.Child;
+import pl.aniolySystem.webApp.Entity.Guardian;
 
 import java.util.List;
 
@@ -40,5 +41,17 @@ public class ChildServiceImpl implements ChildService {
     @Transactional
     public void deleteById(int theId) {
         childDAOImpl.deleteById(theId);
+    }
+
+    @Override
+    @Transactional
+    public void assignGuardian(int childId, int guardianId) {
+        childDAOImpl.assignGuardian(childId, guardianId);
+    }
+
+    @Override
+    @Transactional
+    public List<Guardian> getGuardianList(int childId) {
+        return childDAOImpl.getGuardianList(childId);
     }
 }

@@ -3,6 +3,7 @@ package pl.aniolySystem.webApp.REST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.aniolySystem.webApp.Entity.Child;
+import pl.aniolySystem.webApp.Entity.Guardian;
 import pl.aniolySystem.webApp.Service.ChildServiceImpl;
 
 import java.util.List;
@@ -17,31 +18,42 @@ public class ChildRESTController {
         childService = theChildServiceImpl;
     }
 
-    @GetMapping("/children")
+    @GetMapping("/child")
     public List<Child> getAll(){
         return childService.getAll();
     }
 
-    @GetMapping("/children&id={theId}")
+    @GetMapping("/child&id={theId}")
     public Child findById(@PathVariable int theId){
         return childService.findById(theId);
     }
 
-    @PostMapping("/children/add")
+    @PostMapping("/child/add")
     public Child addChild(@RequestBody Child child){
         child.setId(0);
-
         childService.save(child);
         return child;
     }
 
-    @PutMapping("/children/update")
+    @GetMapping("/child/assignGuardian&childId={childId}&guardianId={guardianId}")
+    public Child assignGuardianToChild( @PathVariable int childId, @PathVariable int guardianId){
+        childService.assignGuardian(childId,guardianId);
+        return childService.findById(childId);
+    }
+
+    @GetMapping("/child/getGurdians&id={theId}")
+    public List<Guardian> getChildGuardians(@PathVariable int theId){
+        return childService.getGuardianList(theId);
+    }
+
+
+    @PutMapping("/child/update")
     public Child updateChild(@RequestBody Child child){
         childService.save(child);
         return child;
     }
 
-    @DeleteMapping("/children/delete&id={theId}")
+    @DeleteMapping("/child/delete&id={theId}")
     public String deleteById(@PathVariable int theId){
         try {
             Child child = childService.findById(theId);
