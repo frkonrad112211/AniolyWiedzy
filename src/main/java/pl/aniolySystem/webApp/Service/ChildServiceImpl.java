@@ -1,8 +1,11 @@
 package pl.aniolySystem.webApp.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.aniolySystem.webApp.DAO.ChildDAOImpl;
 import pl.aniolySystem.webApp.Entity.Child;
 import pl.aniolySystem.webApp.Entity.Guardian;
@@ -28,7 +31,10 @@ public class ChildServiceImpl implements ChildService {
     @Override
     @Transactional
     public Child findById(int theId) {
-        return childDAOImpl.findById(theId);
+
+        Child child = childDAOImpl.findById(theId);
+        return child;
+
     }
 
     @Override
@@ -54,4 +60,6 @@ public class ChildServiceImpl implements ChildService {
     public List<Guardian> getGuardianList(int childId) {
         return childDAOImpl.getGuardianList(childId);
     }
+
+
 }
