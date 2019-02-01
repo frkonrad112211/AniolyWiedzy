@@ -2,70 +2,63 @@ package pl.aniolySystem.webApp.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pl.aniolySystem.webApp.DTO.ChildDTO;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "child")
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Child {
 
     @Id
-    @Column(name = "child_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-
-    @Column(name = "child_name")
     String name;
-
-    @Column(name = "child_last_name")
     String lastName;
-
-    @Column(name = "child_birth_date")
     Date birthDate;
-
-    @Column(name = "child_street")
     String street;
-
-    @Column(name = "child_city")
     String city;
-
-    @Column(name = "child_mobile")
     String mobile;
-
-    @Column(name = "child_help")
     String help;
-
-    @Column(name = "child_school")
     String school;
-
-    @Column(name = "child_hobbies")
     String hobbies;
-
-    @Column(name = "child_possibilities")
     String possibilities;
-
-    @Column(name = "child_add_note")
     String addNote;
-
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "care",
             joinColumns = { @JoinColumn(name = "child_id") },
             inverseJoinColumns = { @JoinColumn(name = "guardian_id") }
     )
+    Set<Guardian> guardianList;
+
     @JsonManagedReference
-    List<Guardian> guardianList;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "teach",
+            joinColumns = { @JoinColumn(name = "child_id") },
+            inverseJoinColumns = { @JoinColumn(name = "volo_id") }
+    )
+    Set<Volo> voloList;
 
-    public  void assignGuardian(Guardian guardian){
-        guardianList.add(guardian);
-    }
 
-    public Child() {
-    }
 
-    public Child(String name, String lastName, Date birthDate, String street, String city, String mobile, String help) {
+    public Child(String name, String lastName, Date birthDate, String street, String city, String mobile, String help, String school, String hobbies, String possibilities, String addNote) {
         this.name = name;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -73,109 +66,25 @@ public class Child {
         this.city = city;
         this.mobile = mobile;
         this.help = help;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getHelp() {
-        return help;
-    }
-
-    public void setHelp(String help) {
-        this.help = help;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
         this.school = school;
-    }
-
-    public String getHobbies() {
-        return hobbies;
-    }
-
-    public void setHobbies(String hobbies) {
         this.hobbies = hobbies;
-    }
-
-    public String getPossibilities() {
-        return possibilities;
-    }
-
-    public void setPossibilities(String possibilities) {
         this.possibilities = possibilities;
-    }
-
-    public String getAddNote() {
-        return addNote;
-    }
-
-    public void setAddNote(String addNote) {
         this.addNote = addNote;
     }
 
-    public List<Guardian> getGuardianList() {
-        return guardianList;
+    public void fromChildDTOtoChild(ChildDTO childDTO){
+        this.name = childDTO.getName();
+        this.lastName = childDTO.getLastName();
+        this.birthDate = childDTO.getBirthDate();
+        this.city = childDTO.getCity();
+        this.help = childDTO.getHelp();
+        this.mobile = childDTO.getMobile();
+        this.street = childDTO.getStreet();
+        this.addNote = childDTO.getAddNote();
+        this.hobbies = childDTO.getHobbies();
+        this.possibilities = childDTO.getPossibilities();
+        this.school = childDTO.getSchool();
+
     }
 
-    public void setGuardianList(List<Guardian> guardianList) {
-        this.guardianList = guardianList;
-    }
 }

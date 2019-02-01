@@ -1,52 +1,50 @@
 package pl.aniolySystem.webApp.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import pl.aniolySystem.webApp.DTO.GuardianDTO;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "guardian")
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Guardian {
 
     @Id
-    @Column(name = "guardian_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-
-    @Column(name = "guardian_name")
     String name;
-
-    @Column(name = "guardian_last_name")
     String lastName;
-
-    @Column(name = "guardian_street")
     String street;
-
-    @Column(name = "guardian_city")
     String city;
-
-    @Column(name = "guardian_mobile")
     String mobile;
-
-    @Column(name = "guardian_email")
     String email;
-
-    @Column(name = "guardian_add_note")
     String addNote;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "guardianList")
     @JsonBackReference
-    List<Child> childList;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "care",
+            joinColumns = { @JoinColumn(name = "guardian_id") },
+            inverseJoinColumns = { @JoinColumn(name = "child_id") }
+    )
+    Set<Child> childList;
 
-    public Guardian() {
-    }
-
-    public Guardian(String name, String lastName, String mobile) {
-        this.name = name;
-        this.lastName = lastName;
-        this.mobile = mobile;
+    public void guardianDTOtoguardian(GuardianDTO guardianDTO){
+        this.name = guardianDTO.getName();
+        this.lastName = guardianDTO.getLastName();
+        this.mobile = guardianDTO.getMobile();
+        this.city = guardianDTO.getCity();
+        this.addNote = guardianDTO.getAddNote();
+        this.email = guardianDTO.getEmail();
     }
 
     public Guardian(String name, String lastName, String street, String city, String mobile, String email, String addNote) {
@@ -58,77 +56,4 @@ public class Guardian {
         this.email = email;
         this.addNote = addNote;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddNote() {
-        return addNote;
-    }
-
-    public void setAddNote(String addNote) {
-        this.addNote = addNote;
-    }
-
-    public List<Child> getChildList() {
-        return childList;
-    }
-
-    public void setChildList(List<Child> childList) {
-        this.childList = childList;
-    }
-
 }

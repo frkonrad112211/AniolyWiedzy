@@ -3,43 +3,44 @@ package pl.aniolySystem.webApp.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.aniolySystem.webApp.DAO.VoloDAO;
-import pl.aniolySystem.webApp.DAO.VoloDAOImpl;
 import pl.aniolySystem.webApp.Entity.Volo;
+import pl.aniolySystem.webApp.Exceptions.VoloNotFoundException;
+import pl.aniolySystem.webApp.Repository.VoloRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoloServiceImpl implements VoloService{
     @Autowired
-    private VoloDAOImpl voloDAOImpl;
-
-    @Autowired
-    public VoloServiceImpl(VoloDAOImpl theVoloDaoImpl) {
-        voloDAOImpl = theVoloDaoImpl;
-    }
+    private VoloRepository voloRepository;
 
     @Override
     @Transactional
     public List<Volo> getAll() {
-        return voloDAOImpl.findAll();
+        return voloRepository.findAll();
     }
 
     @Override
     @Transactional
     public Volo findById(int theId) {
-        return voloDAOImpl.findById(theId);
+        Optional<Volo> volo = voloRepository.findById(theId);
+        if(!volo.isPresent()){
+            throw new VoloNotFoundException();
+        }
+        return volo.get();
     }
 
     @Override
     @Transactional
     public void save(Volo theVolo) {
-        voloDAOImpl.save(theVolo);
+        voloRepository.saveAndFlush(theVolo);
     }
 
     @Override
     @Transactional
     public void deleteById(int theId) {
-        voloDAOImpl.deleteById(theId);
+        Volo volo = findById(theId);
+        voloRepository.deleteById(volo.getId());
     }
 }

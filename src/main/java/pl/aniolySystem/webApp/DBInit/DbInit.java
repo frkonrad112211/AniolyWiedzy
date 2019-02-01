@@ -1,15 +1,15 @@
 package pl.aniolySystem.webApp.DBInit;
 
-import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-
 import pl.aniolySystem.webApp.Entity.Child;
 import pl.aniolySystem.webApp.Entity.Guardian;
 import pl.aniolySystem.webApp.Entity.Volo;
-import pl.aniolySystem.webApp.Service.*;
+import pl.aniolySystem.webApp.Service.ChildService;
+import pl.aniolySystem.webApp.Service.GuardianService;
+import pl.aniolySystem.webApp.Service.VoloService;
 
 import java.util.Date;
 
@@ -30,11 +30,14 @@ public class DbInit implements ApplicationRunner {
 
         public void run(ApplicationArguments args) {
             Child child1 = new Child("child - Lucja","Nowak",new Date(2008-1900,03,10),
-                    "Łacznosci 13/1", "Wrocław", "852159753", "Matematyka");
+                    "Łacznosci 13/1", "Wrocław", "852159753", "Matematyka", "Szkoła",
+                    "Hoobby", "Possibilities", "addNote");
             Child child2 = new Child("child - Marcin","Furman",new Date(2005-1900,12,
-                    15), "Sliczna 1", "Wrocław", "789654123", "Geografia");
+                    15), "Sliczna 1", "Wrocław", "789654123", "Geografia", "Szkoła",
+                    "Hoobby", "Possibilities", "addNote");
             Child child3 = new Child("child - Edward","Wierzbicki",new Date(2002-1900,10,
-                    11),"Teczowa 78", "Wrocław", "506 129 841", "Fizyka");
+                    11),"Teczowa 78", "Wrocław", "506 129 841", "Fizyka", "Szkoła",
+                    "Hoobby", "Possibilities", "addNote");
 
             childService.save(child1);
             childService.save(child2);
@@ -63,6 +66,7 @@ public class DbInit implements ApplicationRunner {
             voloService.save(volo2);
 
             childService.assignGuardian(child1.getId(),guardian1.getId());
+            childService.assignVolo(child1.getId(),volo1.getId());
 
 
 
