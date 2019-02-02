@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.anioly-system</groupId>
-    <artifactId>webapp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>webapp</name>
+    <artifactId>AniolySystem</artifactId>
+    <version>1.0.0</version>
+    <name>AniolySystem</name>
     <description>Managmenet system for volunteers, guardians and speeding up recrutation.</description>
 
     <properties>
